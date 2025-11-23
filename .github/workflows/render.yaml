@@ -15,9 +15,9 @@ jobs:
                 RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "${{ secrets.RENDER_PING_URL }}")
                 
                 if [ "$RESPONSE" -eq 200 ]; then
-                  echo "✅ Ping successful! Status code: $RESPONSE"
+                  echo "Ping successful! Status code: $RESPONSE"
                 else
-                  echo "❌ Ping failed with status code: $RESPONSE"
+                  echo "Ping failed with status code: $RESPONSE"
                   exit 1
                 fi
                 
