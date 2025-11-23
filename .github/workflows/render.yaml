@@ -13,3 +13,4 @@ jobs:
                 name: "Ping Render service"
                 run: |
                     curl -fsS "${{ secrets.RENDER_PING_URL }}" || echo "Ping failed"
+                    echo "Ping run successful"
