@@ -1,5 +1,7 @@
 # CommitSync
 
+[![Ping Render keep-alive](https://github.com/the-chill-devs/commit-sync/actions/workflows/render.yaml/badge.svg)](https://github.com/the-chill-devs/commit-sync/actions/workflows/render.yaml)
+
 A lightweight Discord bot that posts commits made by members of the organization to a Discord channel.
 
 ## Features
