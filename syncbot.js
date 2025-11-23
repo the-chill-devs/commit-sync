@@ -103,10 +103,18 @@ app.post('/webhook/github', verifyGitHubSignature, async (req, res) => {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.status(200).send('Bot is running');
+  const uptime = process.uptime();
+  const timestamp = new Date().toISOString();
+  
+  console.log(`Health check at ${timestamp} - Uptime: ${Math.floor(uptime)}s`);
+  
+  res.status(200).json({
+    status: 'ok',
+    timestamp: timestamp,
+    uptime: uptime
+  });
 });
 
 app.listen(PORT, () => {
-  console.log(`GitHub to Discord webhook bot listening on port ${PORT}`);
-  console.log(`Webhook endpoint: http://localhost:${PORT}/webhook/github`);
+  console.log(`Bot is up and running on port ${PORT}...`);
 });
