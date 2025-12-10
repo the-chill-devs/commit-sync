@@ -14,7 +14,7 @@ const GITHUB_WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET;
 // Verify GitHub webhook signature
 function verifyGitHubSignature(req, res, next) {
   const signature = req.headers['x-hub-signature-256'];
-  
+
   if (!signature) {
     return res.status(401).send('No signature provided');
   }
@@ -33,15 +33,16 @@ function verifyGitHubSignature(req, res, next) {
 function formatCommitEmbed(commit, repository) {
   const commitUrl = commit.url;
   const shortSha = commit.id.substring(0, 7);
-  const author = commit.author.name;
-  const message = commit.message.split('\n')[0]; 
+  const authorName = commit.author.name;
+  const authorUsername = commit.author.username;
+  const message = commit.message.split('\n')[0];
   const timestamp = commit.timestamp;
 
   return {
     color: 0x7289DA,
     author: {
-      name: author,
-      icon_url: commit.author.avatar_url || commit.author.gravatar_id
+      name: authorName,
+      icon_url: authorUsername ? `https://github.com/${authorUsername}.png` : undefined
     },
     title: `[${repository.name}:${commit.branch || 'unknown'}]`,
     description: `[\`${shortSha}\`](${commitUrl}) ${message}`,
@@ -55,7 +56,7 @@ function formatCommitEmbed(commit, repository) {
 // Handle push events
 app.post('/webhook/github', verifyGitHubSignature, async (req, res) => {
   const event = req.headers['x-github-event'];
-  
+
   // Only handle push events
   if (event !== 'push') {
     return res.status(200).send('Event ignored');
@@ -81,7 +82,7 @@ app.post('/webhook/github', verifyGitHubSignature, async (req, res) => {
     }));
 
     // Create embeds for each commit (limit to 10 to avoid Discord rate limits)
-    const embeds = commitsWithBranch.slice(0, 10).map(commit => 
+    const embeds = commitsWithBranch.slice(0, 10).map(commit =>
       formatCommitEmbed(commit, repository)
     );
 
@@ -105,9 +106,9 @@ app.post('/webhook/github', verifyGitHubSignature, async (req, res) => {
 app.get('/health', (req, res) => {
   const uptime = process.uptime();
   const timestamp = new Date().toISOString();
-  
+
   console.log(`Health check at ${timestamp} - Uptime: ${Math.floor(uptime)}s`);
-  
+
   res.status(200).json({
     status: 'ok',
     timestamp: timestamp,
